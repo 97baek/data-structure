@@ -11,6 +11,10 @@ class BST {
     this.root = null;
   }
 
+  getRoot() {
+    return this.root;
+  }
+
   insert(value) {
     const newNode = new Node(value);
     if (this.root === null) {
@@ -57,42 +61,51 @@ class BST {
     return null; // 값을 발견하지 못하면 null 리턴
   }
 
+  inOrder(node) {
+    if (!(node === null)) {
+      this.inOrder(node.left);
+      console.log(node.value);
+      this.inOrder(node.right);
+    }
+  }
+
   remove(value) {
-    const removeNode = (node, value) => {
-      if (node === null) {
+    this.root = this.removeNode(this.root, value);
+  }
+
+  removeNode(node, value) {
+    if (node === null) {
+      return null;
+    }
+    // 찾고자 하는 노드를 발견했을 때
+    if (value === node.value) {
+      // 자식이 없는 노드면
+      if (node.left === null && node.right === null) {
         return null;
       }
-      // 찾고자 하는 노드를 발견했을 때
-      if (value === node.value) {
-        // 자식이 없는 노드면
-        if (node.left === null && node.right === null) {
-          return null;
-        }
-        // 왼쪽 자식이 없으면 오른쪽 노드가 삭제된 위치에 들어감
-        if (node.left === null) {
-          return node.right;
-        }
-        // 오른쪽 자식이 없으면 왼쪽 노드가 삭제된 위치에 들어감
-        if (node.right === null) {
-          return node.left;
-        }
-        // 노드의 자식이 두개면 tempNode는 삭제할 node의 right가 되고
-        let tempNode = node.right;
-        while (tempNode.left !== null) {
-          tempNode = tempNode.left;
-        }
-        node.value = tempNode.value;
-        node.right = removeNode(node.right, tempNode.value);
-        return node;
-      } else if (value < node.value) {
-        node.left = removeNode(node.left, value);
-        return node;
-      } else {
-        node.right = removeNode(node.right, value);
-        return node;
+      // 왼쪽 자식이 없으면 오른쪽 노드가 삭제된 위치에 들어감
+      if (node.left === null) {
+        return node.right;
       }
-    };
-    this.root = removeNode(this.root, value);
+      // 오른쪽 자식이 없으면 왼쪽 노드가 삭제된 위치에 들어감
+      if (node.right === null) {
+        return node.left;
+      }
+      // 노드의 자식이 두개면 tempNode는 삭제할 node의 right가 되고
+      let tempNode = node.right;
+      while (tempNode.left !== null) {
+        tempNode = tempNode.left;
+      }
+      node.value = tempNode.value;
+      node.right = this.removeNode(node.right, tempNode.value);
+      return node;
+    } else if (value < node.value) {
+      node.left = this.removeNode(node.left, value);
+      return node;
+    } else {
+      node.right = this.removeNode(node.right, value);
+      return node;
+    }
   }
 }
 
@@ -104,5 +117,4 @@ tree.insert(6);
 tree.insert(8);
 tree.insert(43);
 tree.insert(17);
-tree.remove(4);
-console.log(tree);
+tree.inOrder(tree.getRoot());
