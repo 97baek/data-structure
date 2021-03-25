@@ -13,18 +13,17 @@ class _Array {
   }
 
   push(item) {
-    this.data[this.length] = item;
-    this.length++;
+    this.data[this.length++] = item;
   }
 
   pop() {
     if (this.length < 1) {
       return false;
     } else {
-      const poped = this.data.splice(this.length - 1, 1);
+      this.data.length = this.length - 1;
       this.length--;
 
-      return poped;
+      return this.data;
     }
   }
 
@@ -55,8 +54,7 @@ myArray1.push(7);
 myArray1.push(5);
 myArray1.push(52);
 myArray1.push(6);
-myArray1.delete(0);
-myArray1.insert(10, 10);
+myArray1.pop();
 console.log(myArray1);
 
 // myArray2.push(41);
